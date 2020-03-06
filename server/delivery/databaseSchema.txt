@@ -1,0 +1,57 @@
+
+package main
+
+import (
+	//
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+
+	"github.com/web1_group_project/hospital_server/entity"
+)
+
+func main(){
+
+
+	dbconn, err := gorm.Open("postgres", "postgres://postgres:P@$$w0rDd@localhost/hospital13?sslmode=disable")
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer dbconn.Close()
+	errs:=dbconn.CreateTable(&entity.Role{}).GetErrors()
+
+	errs=dbconn.CreateTable(&entity.User{}).AddForeignKey("role_Id","roles(Id)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Pharmacist{}).AddForeignKey("uuid","users(Id)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Petient{}).AddForeignKey("uuid","users(Id)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Admin{}).AddForeignKey("uuid","users(Id)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Doctor{}).AddForeignKey("uuid","users(Id)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Laboratorist{}).AddForeignKey("uuid","users(Id)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Prescription{}).AddForeignKey("patient_Id","petients(Id)","cascade","cascade").AddForeignKey("doctor_Id","doctors(Id)","cascade","cascade").AddForeignKey("phrmacist_Id","pharmacists(Id)","cascade","cascade").AddForeignKey("patient_name","users(full_name)","cascade","cascade").GetErrors()
+
+	errs=dbconn.CreateTable(&entity.Appointment{}).AddForeignKey("patient_Id","petients(Id)","cascade","cascade").AddForeignKey("doctor_Id","doctors(Id)","cascade","cascade").AddForeignKey("patient_name","users(full_name)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Diagnosis{}).AddForeignKey("patient_Id","petients(Id)","cascade","cascade").AddForeignKey("doctor_Id","doctors(Id)","cascade","cascade").AddForeignKey("laboratorist_Id","laboratorists(Id)","cascade","cascade").AddForeignKey("patient_name","users(full_name)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Medicine{}).AddForeignKey("added_By","pharmacists(Id)","cascade","cascade").GetErrors()
+	errs=dbconn.CreateTable(&entity.Request{}).AddForeignKey("patient_Id","petients(Id)","cascade","cascade").AddForeignKey("doctor_Id","doctors(Id)","cascade","cascade").AddForeignKey("approved_By","admins(Id)","cascade","cascade").AddForeignKey("patient_name","users(full_name)","cascade","cascade").GetErrors()
+	
+	errs:=dbconn.CreateTable(&entity.Session{}).GetErrors()
+
+
+
+
+
+
+
+
+
+	if errs!=nil {
+		panic(errs)
+
+	}
+
+
+
+}
+
+
