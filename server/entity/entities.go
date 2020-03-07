@@ -20,9 +20,9 @@ type User struct {
 }
 type Post struct{
 	Uuid       uint
-	title string
-	body string
-	rate int
+	Title string
+	Body string
+	Rate int
 }
 type Message struct{
 	SenderId uint
